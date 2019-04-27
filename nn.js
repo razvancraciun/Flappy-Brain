@@ -22,8 +22,8 @@ class NeuralNetwork {
 		let output;
 		tf.tidy(() => {
 			let inputLayer = tf.tensor(input, [ 1, this.inputNodes ]);
-			let hiddenLayer = inputLayer.matMul(this.inputWeights).sigmoid();
-			let outputLayer = hiddenLayer.matMul(this.outputWeights).sigmoid();
+			let hiddenLayer = inputLayer.matMul(this.inputWeights).tanh();
+			let outputLayer = hiddenLayer.matMul(this.outputWeights).tanh();
 			output = outputLayer.dataSync()[0];
 		});
 		return output;
