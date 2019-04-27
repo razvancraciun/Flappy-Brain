@@ -2,10 +2,10 @@ class Pipe {
 	constructor(x, y) {
 		this.x = x;
 		this.y = y;
-		this.width = 90;
+		this.width = 75;
 		this.height = 1000;
-		this.gap = 200;
-		this.xVel = -3;
+		this.gap = 150;
+		this.xVel = -2.5 * SPEED;
 	}
 
 	draw() {
