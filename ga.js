@@ -3,13 +3,19 @@ let nextGeneration = () => {
 
 	// console.log('before: ' + tf.memory().numTensors);
 	for (let i = 0; i < POPSIZE - 1; i++) {
-		population.push(pickOne());
+		population.push(pickOneT());
 		population[i].score = 0;
 	}
 
 	for (let i = 1; i < POPSIZE - 1; i += 2) {
 		if (Math.random() < 0.6) {
 			cross(population[i], population[i - 1]);
+		}
+	}
+
+	for (bird of population) {
+		if (Math.random < 0.1) {
+			bird.forget(0.5);
 		}
 	}
 
@@ -28,6 +34,7 @@ let nextGeneration = () => {
 };
 
 let pickOne = () => {
+	//roulette
 	let chance = Math.random();
 	let sum = 0;
 	for (bird of savedPop) {
@@ -37,6 +44,17 @@ let pickOne = () => {
 			return result;
 		}
 	}
+};
+
+let pickOneT = () => {
+	//Tournament
+	let first = Math.floor(Math.random() * savedPop.length);
+	let second = Math.floor(Math.random() * savedPop.length);
+	//let third = Math.floor(Math.random())
+	if (first.fitness > second.fitness) {
+		return new Bird(first.brain);
+	}
+	else return new Bird(second.brain);
 };
 
 let calculateFitness = () => {
@@ -50,10 +68,10 @@ let calculateFitness = () => {
 };
 
 let cross = (first, second) => {
-	let firstInput = first.brain.inputWeights.dataSync();
-	let firstOutput = first.brain.outputWeights.dataSync();
-	let secondInput = second.brain.inputWeights.dataSync();
-	let secondOutput = second.brain.outputWeights.dataSync();
+	let firstInput = first.brain.inputWeights.dataSync().slice();
+	let firstOutput = first.brain.outputWeights.dataSync().slice();
+	let secondInput = second.brain.inputWeights.dataSync().slice();
+	let secondOutput = second.brain.outputWeights.dataSync().slice();
 	let firstInShape = first.brain.inputWeights.shape;
 	let firstOutShape = first.brain.outputWeights.shape;
 	let secondInShape = second.brain.inputWeights.shape;

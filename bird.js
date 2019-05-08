@@ -10,7 +10,7 @@ class Bird {
 			this.brain = new NeuralNetwork(brain);
 		}
 		else {
-			this.brain = new NeuralNetwork(5, 4, 1);
+			this.brain = new NeuralNetwork(4, 6, 1);
 		}
 
 		this.score = 0;
@@ -43,16 +43,16 @@ class Bird {
 		let inputs = [];
 		inputs.push(this.y / height);
 		inputs.push(this.yVel / 10);
-		inputs.push(nextPipe.y / height);
+		inputs.push((nextPipe.y - nextPipe.gap / 2) / height);
 		inputs.push((nextPipe.x - (this.x + this.width)) / width);
-		inputs.push((nextPipe.y - nextPipe.gap) / height);
+
 		if (this.brain.predict(inputs) > 0.5) {
 			this.up();
 		}
 	}
 
 	up() {
-		this.yVel = -5;
+		this.yVel = -6;
 	}
 
 	mutate(rate) {
@@ -68,6 +68,25 @@ class Bird {
 		outputWeights.forEach((weight) => {
 			if (Math.random() < rate) {
 				weight += Math.random() / 5 - 0.1;
+			}
+		});
+		tf.dispose(this.brain.inputWeights);
+		tf.dispose(this.brain.outputWeights);
+		this.brain.inputWeights = tf.tensor(inputWeights, shapeIn);
+		this.brain.outputWeights = tf.tensor(outputWeights, shapeOut);
+	}
+
+	forget(rate) {
+		const inputWeights = this.brain.inputWeights.dataSync().slice();
+		const outputWeights = this.brain.outputWeights.dataSync().slice();
+		inputWeights.forEach((weight) => {
+			if (Math.random < rate) {
+				weight = 0;
+			}
+		});
+		outputWeights.forEach((weight) => {
+			if (Math.random < rate) {
+				weight = 0;
 			}
 		});
 		tf.dispose(this.brain.inputWeights);
